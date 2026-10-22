@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kelas Raudhah v0.6.0</title>
+<title>Kelas Raudhah v0.7.0</title>
 <style>
 :root{--bg:#f4f1ea;--fg:#1f2933;--card:#ffffff;--ac:#2f6f4f;--mut:#5f6b76}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1f23;--fg:#eef1f4;--card:#262c32;--ac:#6fcf97;--mut:#a3adb8}}
@@ -54,9 +54,9 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:
 
 <script>
 (function(){
-var VERSI='v0.6.0', bagian='awal', srv='';
+var VERSI='v0.7.0', bagian='awal', srv='';
 var API_URL='https://script.google.com/macros/s/AKfycbxhPo2-GvJClHxNav_TMjN4sFiLCzyi8yTFvbIQT62yUQ8NPBaAaIZCbTN5fmN85qc/exec';
-var GOOGLE_CLIENT_ID='';
+var GOOGLE_CLIENT_ID='826616122681-5uhithq0tib20nrmeq9i2qlahh5mdpoo.apps.googleusercontent.com';
 var sentuh=('ontouchstart' in window)||(navigator.maxTouchPoints>0);
 var elV=document.getElementById('ver');
 function setV(ok){elV.textContent='Kelas Raudhah '+VERSI+srv+(ok?'':' · error pada '+bagian);elV.className=ok?'':'err';}
@@ -332,12 +332,28 @@ function muatGoogle(){
 }
 function bangunMasuk(){
  var o=document.createElement('div');o.id='ovl';
- o.innerHTML='<div class="kt"><h2>Kelas Raudhah</h2><p>Masuk untuk memulai belajar.</p><div id="gbtn"></div><p id="gnote" class="atau" style="display:none">Login Google belum diaktifkan. Gunakan akun sandi.</p><p class="atau">atau masuk dengan akun sandi</p><input id="lu" placeholder="Username" autocomplete="username" autocapitalize="none"><input id="ls" type="password" placeholder="Sandi" autocomplete="current-password"><button id="lm">Masuk</button><div id="kodeBox" style="display:none"><p>Akun Google belum terdaftar. Masukkan kode kelas dari guru:</p><input id="lk" placeholder="Kode kelas" maxlength="12"><button id="lk2" style="margin-top:8px;width:100%">Gabung</button></div><p id="lerr" class="err"></p></div>';
+ o.innerHTML='<div class="kt"><h2>Kelas Raudhah</h2><p>Masuk untuk memulai belajar.</p><div id="gbtn"></div><p id="gnote" class="atau" style="display:none">Login Google belum diaktifkan. Gunakan akun sandi.</p><p class="atau">atau masuk dengan akun sandi</p><input id="lu" placeholder="Username atau email" autocomplete="username" autocapitalize="none"><input id="ls" type="password" placeholder="Sandi" autocomplete="current-password"><button id="lm">Masuk</button><button id="ld" type="button" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">Daftar siswa baru</button><div id="kodeBox" style="display:none"><p>Akun Google belum terdaftar. Masukkan kode kelas dari guru:</p><input id="lk" placeholder="Kode kelas" maxlength="12"><button id="lk2" style="margin-top:8px;width:100%">Gabung</button></div><p id="lerr" class="err"></p><div id="dBox" style="display:none;flex-direction:column;gap:8px"><p><b>Daftar akun siswa</b></p><input id="dl" placeholder="Nama lengkap" maxlength="60" autocomplete="name"><input id="dp" placeholder="Nama pendek (tampil di avatar)" maxlength="20"><input id="dk" placeholder="Kode kelas dari guru" maxlength="12" autocomplete="off" autocapitalize="characters"><input id="de" type="email" placeholder="Email" autocomplete="username"><input id="dsk" placeholder="Asal sekolah" maxlength="60"><input id="ds" type="password" placeholder="Kata sandi (min. 8 karakter)" maxlength="64" autocomplete="new-password"><input id="ds2" type="password" placeholder="Ulangi kata sandi" maxlength="64" autocomplete="new-password"><button id="dg" type="button">Daftar</button><button id="db" type="button" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">Kembali</button></div></div>';
  document.body.appendChild(o);
  var hd=document.createElement('div');hd.id='hud';hd.innerHTML='<span id="hudT"></span><button id="hudK">Kelola</button><button id="hudX">Keluar</button>';document.body.appendChild(hd);
  function masukSandi(){lerr('');el('lm').disabled=true;gs('masukSandi',{username:el('lu').value,sandi:el('ls').value}).then(function(j){el('lm').disabled=false;if(j&&j.ok)setelahMasuk(j);else lerr(j&&j.error);});}
  el('lm').onclick=masukSandi;el('ls').addEventListener('keydown',function(e){if(e.key==='Enter')masukSandi();});el('lu').addEventListener('keydown',function(e){if(e.key==='Enter')masukSandi();});
  el('lk2').onclick=function(){kirimGoogle(el('lk').value);};
+ function modeDaftar(on){
+  el('dBox').style.display=on?'flex':'none';lerr('');
+  var kids=el('ovl').querySelector('.kt').children;
+  for(var i=0;i<kids.length;i++){var k=kids[i];if(k.id==='dBox'||k.id==='lerr'||k.tagName==='H2')continue;k.style.display=on?'none':'';}
+  if(!on){el('kodeBox').style.display='none';el('gnote').style.display=GOOGLE_CLIENT_ID?'none':'block';}
+ }
+ el('ld').onclick=function(){modeDaftar(true);};
+ el('db').onclick=function(){modeDaftar(false);};
+ el('dg').onclick=function(){
+  lerr('');if(el('ds').value!==el('ds2').value){lerr('Kedua kata sandi harus sama.');return;}
+  el('dg').disabled=true;
+  gs('daftarAkun',{namaLengkap:el('dl').value,namaPendek:el('dp').value,kode:el('dk').value,email:el('de').value,sekolah:el('dsk').value,sandi:el('ds').value}).then(function(j){
+   el('dg').disabled=false;
+   if(j&&j.ok){el('ds').value='';el('ds2').value='';modeDaftar(false);setelahMasuk(j);}else lerr(j&&j.error);
+  });
+ };
  el('hudX').onclick=function(){gs('keluar').then(function(){simpanToken('');berdiri();tampilLogin('Anda sudah keluar.');});};
  el('hudK').onclick=function(){bukaKelola();};
  el('kb').addEventListener('click',klikPanel);
@@ -461,6 +477,6 @@ function mulai(){if(window.AFRAME){try{pasangScene();}catch(e){setV(false);}}els
 if(document.readyState==='complete')mulai();else window.addEventListener('load',mulai);
 })();
 </script>
-<!-- akhir Kelas Raudhah v0.6.0 -->
+<!-- akhir Kelas Raudhah v0.7.0 -->
 </body>
 </html>
