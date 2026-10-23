@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kelas Raudhah v0.8.0</title>
+<title>Kelas Raudhah v0.8.1</title>
 <style>
 :root{--bg:#f4f1ea;--fg:#1f2933;--card:#ffffff;--ac:#2f6f4f;--mut:#5f6b76}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1f23;--fg:#eef1f4;--card:#262c32;--ac:#6fcf97;--mut:#a3adb8}}
@@ -54,7 +54,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:
 
 <script>
 (function(){
-var VERSI='v0.8.0', bagian='awal', srv='';
+var VERSI='v0.8.1', bagian='awal', srv='';
 var API_URL='https://script.google.com/macros/s/AKfycbxhPo2-GvJClHxNav_TMjN4sFiLCzyi8yTFvbIQT62yUQ8NPBaAaIZCbTN5fmN85qc/exec';
 var GOOGLE_CLIENT_ID='503152505847-niasbva2uksvum09lsm85j8pursok0b8.apps.googleusercontent.com';
 var sentuh=('ontouchstart' in window)||(navigator.maxTouchPoints>0);
@@ -424,7 +424,7 @@ function renderLatihan(j){
   j.soal.forEach(function(s){
    if(s.materi_id!==lat.materi_id)return;var jw=j.jawaban[s.soal_id],sdh=(jw!==undefined);
    h+='<div class="soal" data-s="'+esc(s.soal_id)+'"'+(sdh?' data-done="1"':'')+'><p><b>'+esc(s.no)+'.</b> '+esc(s.pertanyaan)+'</p>';
-   ['A','B','C','D'].forEach(function(k){h+='<label class="op"><input type="radio" name="r'+esc(s.soal_id)+'" value="'+k+'"'+(sdh?' disabled':'')+'> '+k+'. '+esc(s.opsi[k])+'</label>';});
+   (s.opsiUrut||[]).forEach(function(o,i){h+='<label class="op"><input type="radio" name="r'+esc(s.soal_id)+'" value="'+esc(o.k)+'"'+(sdh?' disabled':'')+'> '+'ABCD'.charAt(i)+'. '+esc(o.t)+'</label>';});
    h+=sdh?'<p class="hs '+(jw?'ok':'no')+'">'+(jw?'✓ Benar (sudah dijawab)':'✗ Sudah dijawab, belum tepat')+'</p>':'<button class="jw" data-act="jawab">Jawab</button><p class="hs"></p>';
    h+='</div>';
   });
@@ -522,6 +522,6 @@ function mulai(){if(window.AFRAME){try{pasangScene();}catch(e){setV(false);}}els
 if(document.readyState==='complete')mulai();else window.addEventListener('load',mulai);
 })();
 </script>
-<!-- akhir Kelas Raudhah v0.8.0 -->
+<!-- akhir Kelas Raudhah v0.8.1 -->
 </body>
 </html>
