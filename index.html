@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kelas Raudhah v0.10.0</title>
+<title>Kelas Raudhah v0.10.1</title>
 <style>
 :root{--bg:#f4f1ea;--fg:#1f2933;--card:#ffffff;--ac:#2f6f4f;--mut:#5f6b76}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1f23;--fg:#eef1f4;--card:#262c32;--ac:#6fcf97;--mut:#a3adb8}}
@@ -30,7 +30,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:
 #hint{top:calc(54px + env(safe-area-inset-top,0px))}
 #hud{position:fixed;left:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:22;display:none;gap:8px;align-items:center;background:var(--card);color:var(--fg);padding:5px 10px;border-radius:14px;font-size:13px}
 #hud button{border:0;background:transparent;color:var(--ac);cursor:pointer;font-size:13px;text-decoration:underline;padding:0}
-.soal{border-top:1px solid rgba(128,128,128,.3);padding:8px 0}.op{display:block;padding:3px 0}.hs{margin:4px 0;font-size:14px}.hs.ok{color:#2e7d32}.hs.no{color:#b3261e}
+.chS{display:inline-block;min-width:28px;padding:4px 0;margin:2px;text-align:center;border-radius:14px;border:1px solid rgba(128,128,128,.5);background:transparent;color:inherit;font-size:13px;cursor:pointer}.chS.cur{background:var(--ac);color:#fff;border-color:var(--ac)}.chS.ok{border-color:#2e7d32;color:#2e7d32}.chS.no{border-color:#b3261e;color:#b3261e}.chS.cur.ok,.chS.cur.no{color:#fff}.soal{border-top:1px solid rgba(128,128,128,.3);padding:8px 0}.op{display:block;padding:3px 0}.hs{margin:4px 0;font-size:14px}.hs.ok{color:#2e7d32}.hs.no{color:#b3261e}
 .jw{padding:7px 16px;border:0;border-radius:8px;background:var(--ac);color:#fff;cursor:pointer}
 #kb h3{margin:12px 0 4px}#kb h4{margin:10px 0 4px}.tb{width:100%;border-collapse:collapse;font-size:13px}.tb td,.tb th{border:1px solid rgba(128,128,128,.35);padding:4px 6px;text-align:center}.tb td:first-child,.tb th:first-child{text-align:left}.tbw{overflow-x:auto}.cp{display:inline-block;width:10px;height:10px;border-radius:50%}#kb .baris{display:flex;gap:6px;margin:4px 0}.hasil{margin-top:10px;padding:8px;border-radius:8px;background:rgba(128,128,128,.15);word-break:break-all}
 #kb textarea{padding:10px;border:1px solid var(--mut);border-radius:8px;font:inherit;font-size:15px;background:var(--bg);color:var(--fg);width:100%;box-sizing:border-box;resize:vertical}#kb input[type=checkbox]{width:auto}.sd{border-top:1px solid rgba(128,128,128,.3);padding:8px 0}.sd label,#kb .lb{display:block;font-size:13px;color:var(--mut);margin:6px 0 2px}#kb button.s2{padding:10px;border:1px solid var(--mut);border-radius:10px;background:transparent;color:var(--fg);font-size:15px;cursor:pointer}#kb .dr span{flex:1;align-self:center}#kb pre{white-space:pre-wrap;font-size:12px;background:rgba(128,128,128,.12);padding:8px;border-radius:8px}
@@ -55,7 +55,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:
 
 <script>
 (function(){
-var VERSI='v0.10.0', bagian='awal', srv='';
+var VERSI='v0.10.1', bagian='awal', srv='';
 var API_URL='https://script.google.com/macros/s/AKfycbxhPo2-GvJClHxNav_TMjN4sFiLCzyi8yTFvbIQT62yUQ8NPBaAaIZCbTN5fmN85qc/exec';
 var GOOGLE_CLIENT_ID='503152505847-niasbva2uksvum09lsm85j8pursok0b8.apps.googleusercontent.com';
 var sentuh=('ontouchstart' in window)||(navigator.maxTouchPoints>0);
@@ -421,7 +421,7 @@ function renderLatihan(j){
  LAT=j;var h='',lat=null;
  j.materi.forEach(function(m){if(m.jenis==='Modul'){h+='<h3>'+esc(m.judul)+'</h3>'+String(m.isi).split('\n\n').map(function(p){return '<p>'+esc(p)+'</p>';}).join('');}if(m.jenis==='Latihan')lat=m;});
  if(lat){
-  h+='<h3>'+esc(lat.judul)+'</h3><p><small>'+esc(lat.isi)+' Poin hanya dari jawaban pertama.</small></p>';
+  h+='<h3>'+esc(lat.judul)+'</h3><p><small>'+esc(lat.isi)+' Poin hanya dari jawaban pertama. Jawaban yang sudah dikirim tidak bisa diubah; kamu boleh kembali untuk melihatnya.</small></p><p id="noS"></p><div id="chipS"></div>';
   j.soal.forEach(function(s){
    if(s.materi_id!==lat.materi_id)return;var jw=j.jawaban[s.soal_id],sdh=(jw!==undefined);
    h+='<div class="soal" data-s="'+esc(s.soal_id)+'"'+(sdh?' data-done="1"':'')+'><p><b>'+esc(s.no)+'.</b> '+esc(s.pertanyaan)+'</p>';
@@ -429,12 +429,26 @@ function renderLatihan(j){
    h+=sdh?'<p class="hs '+(jw?'ok':'no')+'">'+(jw?'✓ Benar (sudah dijawab)':'✗ Sudah dijawab, belum tepat')+'</p>':'<button class="jw" data-act="jawab">Jawab</button><p class="hs"></p>';
    h+='</div>';
   });
-  h+='<p id="prg"></p>';
+  h+='<div class="baris"><button class="s2" data-act="prevS">← Sebelumnya</button><button class="p" data-act="nextS">Berikutnya →</button></div><p id="prg"></p>';
  }
- el('kb').innerHTML=h;updPrg();
+ el('kb').innerHTML=h;
+ var bs=document.querySelectorAll('#kb .soal'),mulaiI=0,i0;
+ for(i0=0;i0<bs.length;i0++){if(!bs[i0].hasAttribute('data-done')){mulaiI=i0;break;}}
+ tampilS(mulaiI);updPrg();
+}
+var IDX=0;
+function segarChip(){
+ var bs=document.querySelectorAll('#kb .soal'),c=el('chipS'),n=el('noS');if(!c||!bs.length)return;var h='';
+ Array.prototype.forEach.call(bs,function(b,k){var hs=b.querySelector('.hs'),st=b.hasAttribute('data-done')?(hs&&hs.classList.contains('ok')?' ok':(hs&&hs.classList.contains('no')?' no':'')):'';h+='<button class="chS'+(k===IDX?' cur':'')+st+'" data-act="goS" data-i="'+k+'">'+(k+1)+'</button>';});
+ c.innerHTML=h;if(n)n.innerHTML='<b>Soal '+(IDX+1)+' dari '+bs.length+'</b>';
+ var pv=document.querySelector('#kb [data-act=prevS]'),nx=document.querySelector('#kb [data-act=nextS]');if(pv)pv.disabled=(IDX<=0);if(nx)nx.disabled=(IDX>=bs.length-1);
+}
+function tampilS(i){
+ var bs=document.querySelectorAll('#kb .soal');if(!bs.length)return;IDX=Math.max(0,Math.min(Number(i)||0,bs.length-1));
+ Array.prototype.forEach.call(bs,function(b,k){b.style.display=(k===IDX)?'block':'none';});segarChip();
 }
 function updPrg(){
- var p=el('prg');if(!p)return;var a=document.querySelectorAll('#kb .soal').length,d=document.querySelectorAll('#kb .soal[data-done]').length;
+ segarChip();var p=el('prg');if(!p)return;var a=document.querySelectorAll('#kb .soal').length,d=document.querySelectorAll('#kb .soal[data-done]').length;
  p.innerHTML='<b>Terjawab '+d+'/'+a+'</b>'+(d>=a&&a>0?' · Latihan selesai ✓ Kamu boleh pindah ke mapel lain.':'');
 }
 function bukaGuru(){
@@ -470,8 +484,9 @@ function galatSoal(j){var t='<span class="err">'+esc(j&&j.error||'Gagal.')+'</sp
 function namaMeja(k){return 'Meja '+(KODE_NAMA[k]||k);}
 function kodeMapel(t){t=String(t||'').trim().toLowerCase();var r='';Object.keys(KODE_NAMA).forEach(function(k){if(k.toLowerCase()===t||KODE_NAMA[k].toLowerCase()===t)r=k;});return r;}
 function buatTemplate(kode){
- var L=['## TEMPLATE SOAL KELAS RAUDHAH','## Baris yang diawali tanda ## diabaikan. Jangan ubah kata MAPEL:, JUDUL:, MODUL:, dan SOAL:.','## Mapel yang dikenal: '+Object.keys(KODE_NAMA).map(function(k){return KODE_NAMA[k];}).join(', ')+'.','## Simpan sebagai .txt (UTF-8), lalu unggah lewat tombol Unggah template.','## Minimal 3 soal, tiap soal 4 pilihan A-D dan satu Kunci. Level dan Penjelasan boleh dihapus.','## Pilihan "semua di atas" dan "A dan B" ditolak karena urutan pilihan diacak.','','MAPEL: '+(KODE_NAMA[kode]||''),'JUDUL: ','MODUL:','(tulis bacaan atau pengantar di sini, boleh dikosongkan)','SOAL:'];
- return L.join('\r\n')+'\r\n'+CONTOH.replace(/\n/g,'\r\n')+'\r\n';
+ var L=['## TEMPLATE SOAL KELAS RAUDHAH','## Baris yang diawali tanda ## diabaikan. Jangan ubah kata MAPEL:, JUDUL:, MODUL:, dan SOAL:.','## Mapel yang dikenal: '+Object.keys(KODE_NAMA).map(function(k){return KODE_NAMA[k];}).join(', ')+'.','## Simpan sebagai .txt (UTF-8), lalu unggah lewat tombol Unggah template.','## Tepat 10 soal agar paket bisa dibagikan, tiap soal 4 pilihan A-D dan satu Kunci. Level dan Penjelasan boleh dihapus.','## Pilihan "semua di atas" dan "A dan B" ditolak karena urutan pilihan diacak.','','MAPEL: '+(KODE_NAMA[kode]||''),'JUDUL: ','MODUL:','(tulis bacaan atau pengantar di sini, boleh dikosongkan)','SOAL:'];
+ var T=[CONTOH.split('\n\n')[0]];for(var n=2;n<=10;n++)T.push(n+'. Tulis pertanyaan ...\nA. ...\nB. ...\nC. ...\nD. ...\nKunci: A');
+ return L.join('\r\n')+'\r\n'+T.join('\n\n').replace(/\n/g,'\r\n')+'\r\n';
 }
 function uraiTemplate(t){
  t=String(t).replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');
@@ -513,7 +528,7 @@ function formImpor(){
   h+='<div class="lb">2. Unggah template yang sudah diisi</div><div class="baris"><button class="s2" data-act="unggahT">Unggah template</button></div><input id="im_f" type="file" accept=".txt,text/plain" style="display:none"><div id="im_st"><small>Belum ada berkas diunggah.</small></div>';
   h+='<div class="lb">Mapel</div>'+pilMapel('im_m')+'<div class="lb">Judul paket</div><input id="im_j" maxlength="80" placeholder="mis. Pecahan senilai">';
   h+='<div class="lb">Modul/bacaan (boleh kosong)</div><textarea id="im_mod" rows="3"></textarea><div class="lb">Soal (terisi dari berkas, boleh disunting atau ditempel)</div><textarea id="im_t" rows="8" placeholder="1. Pertanyaan ..."></textarea>';
-  h+='<details><summary><small>Format yang dibaca</small></summary><pre>'+esc(CONTOH)+'</pre><small>Minimal 3 soal, tiap soal 4 pilihan A-D dan satu kunci. Level dan Penjelasan boleh dihilangkan. Pilihan "semua di atas" dan "A dan B" ditolak karena urutan pilihan diacak.</small></details>';
+  h+='<details><summary><small>Format yang dibaca</small></summary><pre>'+esc(CONTOH)+'</pre><small>Tepat 10 soal agar bisa dibagikan (boleh disimpan sebagai draf dulu), tiap soal 4 pilihan A-D dan satu kunci. Level dan Penjelasan boleh dihilangkan. Pilihan "semua di atas" dan "A dan B" ditolak karena urutan pilihan diacak.</small></details>';
   h+='<div class="baris"><div class="lb">3. Periksa isinya, lalu kirim</div><div class="baris"><button class="p" data-act="impor">Kirim template</button></div><small>Dikirim sebagai draf ke daftar paket Anda. Tombol Bagikan ada di editor draf.</small>';
  return h;
 }
@@ -595,6 +610,8 @@ function aksiDraf(a,b){
   return true;
  }
  if(a==='setujuD'){
+  var nS=0;Array.prototype.forEach.call(document.querySelectorAll('#kb .sd[data-s]'),function(x){var c=x.querySelector('.bc');if(!(c&&c.checked))nS++;});
+  if(nS!==10){tampilHasil('<span class="err">Paket harus tepat 10 soal untuk dibagikan (sekarang '+nS+'). Buat ulang paketnya dengan 10 soal.</span>');return true;}
   if(!window.confirm('Bagikan paket ini ke '+namaMeja(DRF.mapel)+'? Siswa langsung melihatnya di meja itu saja, tidak di meja mapel lain.'))return true;
   b.disabled=true;
   gs('simpanDraf',ambilEditor()).then(function(j){
@@ -619,6 +636,7 @@ function tampilHasil(t){var d=el('hasilK');if(d){d.style.display='block';d.inner
 function klikPanel(e){
  var b=e.target.closest&&e.target.closest('[data-act]');if(!b)return;var a=b.getAttribute('data-act');
  if(aksiDraf(a,b))return;
+ if(a==='prevS'){tampilS(IDX-1);return;}if(a==='nextS'){tampilS(IDX+1);return;}if(a==='goS'){tampilS(b.getAttribute('data-i'));return;}
  if(a==='jawab'){
   var box=b.closest('.soal'),sid=box.getAttribute('data-s'),r=box.querySelector('input:checked'),hs=box.querySelector('.hs');
   if(!r){hs.textContent='Pilih satu jawaban dulu.';hs.className='hs no';return;}
@@ -678,6 +696,6 @@ function mulai(){if(window.AFRAME){try{pasangScene();}catch(e){setV(false);}}els
 if(document.readyState==='complete')mulai();else window.addEventListener('load',mulai);
 })();
 </script>
-<!-- akhir Kelas Raudhah v0.10.0 -->
+<!-- akhir Kelas Raudhah v0.10.1 -->
 </body>
 </html>
