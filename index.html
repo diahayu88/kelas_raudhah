@@ -467,6 +467,63 @@ function bukaKelola(){
 var DRF=null,CONTOH='1. Hasil dari 1/2 + 1/4 adalah ...\nA. 3/4\nB. 2/6\nC. 1/6\nD. 2/4\nKunci: A\nLevel: LOTS\nPenjelasan: Samakan penyebut dulu.\n\n2. Soal berikutnya ...\nA. ...\nB. ...\nC. ...\nD. ...\nKunci: C';
 function pilMapel(id){return '<select id="'+id+'">'+Object.keys(KODE_NAMA).map(function(k){return '<option value="'+k+'">'+esc(KODE_NAMA[k])+'</option>';}).join('')+'</select>';}
 function galatSoal(j){var t='<span class="err">'+esc(j&&j.error||'Gagal.')+'</span>';if(j&&j.masalah&&j.masalah.length)t+='<br><small>'+j.masalah.map(esc).join('<br>')+'</small>';return t;}
+function namaMeja(k){return 'Meja '+(KODE_NAMA[k]||k);}
+function kodeMapel(t){t=String(t||'').trim().toLowerCase();var r='';Object.keys(KODE_NAMA).forEach(function(k){if(k.toLowerCase()===t||KODE_NAMA[k].toLowerCase()===t)r=k;});return r;}
+function buatTemplate(kode){
+ var L=['## TEMPLATE SOAL KELAS RAUDHAH','## Baris yang diawali tanda ## diabaikan. Jangan ubah kata MAPEL:, JUDUL:, MODUL:, dan SOAL:.','## Mapel yang dikenal: '+Object.keys(KODE_NAMA).map(function(k){return KODE_NAMA[k];}).join(', ')+'.','## Simpan sebagai .txt (UTF-8), lalu unggah lewat tombol Unggah template.','## Minimal 3 soal, tiap soal 4 pilihan A-D dan satu Kunci. Level dan Penjelasan boleh dihapus.','## Pilihan "semua di atas" dan "A dan B" ditolak karena urutan pilihan diacak.','','MAPEL: '+(KODE_NAMA[kode]||''),'JUDUL: ','MODUL:','(tulis bacaan atau pengantar di sini, boleh dikosongkan)','SOAL:'];
+ return L.join('\r\n')+'\r\n'+CONTOH.replace(/\n/g,'\r\n')+'\r\n';
+}
+function uraiTemplate(t){
+ t=String(t).replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');
+ var mode='',r={mapel:'',judul:'',modul:[],soal:[],adaSoal:false},semua=[];
+ t.split('\n').forEach(function(l){
+  if(/^##/.test(l))return;semua.push(l);var m;
+  if(mode!=='soal'&&/^\s*SOAL\s*:\s*$/i.test(l)){mode='soal';r.adaSoal=true;return;}
+  if(mode===''){
+   if((m=/^\s*MAPEL\s*:\s*(.*)$/i.exec(l))){r.mapel=m[1].trim();return;}
+   if((m=/^\s*JUDUL\s*:\s*(.*)$/i.exec(l))){r.judul=m[1].trim();return;}
+   if((m=/^\s*MODUL\s*:\s*(.*)$/i.exec(l))){mode='modul';if(m[1].trim())r.modul.push(m[1]);return;}
+  }
+  if(mode==='modul')r.modul.push(l);else if(mode==='soal')r.soal.push(l);
+ });
+ if(!r.adaSoal){r.soal=semua;r.modul=[];}
+ r.modulT=r.modul.join('\n').replace(/^\s+|\s+$/g,'');if(/^\(tulis bacaan/i.test(r.modulT))r.modulT='';
+ r.soalT=r.soal.join('\n').replace(/^\s+|\s+$/g,'');
+ r.jumlah=(r.soalT.match(/^\s*\d+\s*[.)]/gm)||[]).length;
+ return r;
+}
+function bacaBerkas(f){
+ var st=el('im_st');if(!f)return;
+ if(f.size>300000){st.innerHTML='<span class="err">Berkas terlalu besar (maksimal 300 KB).</span>';return;}
+ var fr=new FileReader();
+ fr.onerror=function(){st.innerHTML='<span class="err">Berkas tidak bisa dibaca.</span>';};
+ fr.onload=function(){
+  var r=uraiTemplate(fr.result);
+  if(!r.soalT){st.innerHTML='<span class="err">Tidak ada soal di berkas '+esc(f.name)+'. Pakai template dari tombol Unduh template.</span>';return;}
+  var k=kodeMapel(r.mapel);if(k)el('im_m').value=k;
+  if(r.judul)el('im_j').value=r.judul;
+  el('im_mod').value=r.modulT;el('im_t').value=r.soalT;
+  st.innerHTML='<small>Berkas <b>'+esc(f.name)+'</b> terbaca: '+r.jumlah+' soal'+(k?', mapel '+esc(KODE_NAMA[k]):', <span class="err">mapel tidak dikenali, pilih manual</span>')+(r.judul?'':', <span class="err">judul kosong, isi dulu</span>')+'. Periksa lalu tekan Kirim template.</small>';
+ };
+ fr.readAsText(f,'UTF-8');
+}
+function formImpor(){
+ var h='';
+  h+='<h3>Impor soal manual</h3><div class="lb">1. Unduh template, kerjakan offline di komputer</div><div class="baris"><button class="s2" data-act="unduhT">Unduh template</button></div>';
+  h+='<div class="lb">2. Unggah template yang sudah diisi</div><div class="baris"><button class="s2" data-act="unggahT">Unggah template</button></div><input id="im_f" type="file" accept=".txt,text/plain" style="display:none"><div id="im_st"><small>Belum ada berkas diunggah.</small></div>';
+  h+='<div class="lb">Mapel</div>'+pilMapel('im_m')+'<div class="lb">Judul paket</div><input id="im_j" maxlength="80" placeholder="mis. Pecahan senilai">';
+  h+='<div class="lb">Modul/bacaan (boleh kosong)</div><textarea id="im_mod" rows="3"></textarea><div class="lb">Soal (terisi dari berkas, boleh disunting atau ditempel)</div><textarea id="im_t" rows="8" placeholder="1. Pertanyaan ..."></textarea>';
+  h+='<details><summary><small>Format yang dibaca</small></summary><pre>'+esc(CONTOH)+'</pre><small>Minimal 3 soal, tiap soal 4 pilihan A-D dan satu kunci. Level dan Penjelasan boleh dihilangkan. Pilihan "semua di atas" dan "A dan B" ditolak karena urutan pilihan diacak.</small></details>';
+  h+='<div class="baris"><div class="lb">3. Periksa isinya, lalu kirim</div><div class="baris"><button class="p" data-act="impor">Kirim template</button></div><small>Dikirim sebagai draf ke daftar paket Anda. Tombol Bagikan ada di editor draf.</small>';
+ return h;
+}
+function formAI(){
+ var h='';
+  h+='<h3>Soal dari AI</h3><div class="lb">Mapel</div>'+pilMapel('ai_m')+'<div class="lb">Kelas</div><input id="ai_k" maxlength="30" placeholder="Kelas 7">';
+  h+='<div class="lb">Topik</div><input id="ai_t" maxlength="120" placeholder="mis. Pecahan senilai"><div class="lb">Jumlah soal (3-10)</div><input id="ai_n" type="number" min="3" max="10" value="10">';
+  h+='<div class="baris"><button class="p" data-act="aiDraf">Buat draf</button></div><small>Jatah AI per guru dibatasi per hari. Hasil selalu berupa draf yang harus Anda periksa.</small>';
+ return h;
+}
 function bukaDraf(){
  if(!SAYA||SAYA.peran==='siswa')return;
  bukaPanel('Soal & draf','#e08a1e','<p>Memuat…</p>');
@@ -475,13 +532,7 @@ function bukaDraf(){
   var h='<div class="baris"><button class="s2" data-act="mMeja">← Meja guru</button></div><h3>Paket soal saya</h3>';
   if(!j.draf.length)h+='<p><small>Belum ada paket. Impor soal atau buat dengan AI di bawah.</small></p>';
   j.draf.forEach(function(d){h+='<div class="baris dr"><span>'+esc(d.paket_id)+' · '+esc(KODE_NAMA[d.mapel]||d.mapel)+' · '+esc(d.judul)+' <b>['+esc(d.status)+']</b></span><button class="p" style="width:auto" data-act="bukaD" data-p="'+esc(d.paket_id)+'">Buka</button></div>';});
-  h+='<h3>Impor soal manual</h3><div class="lb">Mapel</div>'+pilMapel('im_m')+'<div class="lb">Judul paket</div><input id="im_j" maxlength="80" placeholder="mis. Pecahan senilai">';
-  h+='<div class="lb">Modul/bacaan (boleh kosong)</div><textarea id="im_mod" rows="3"></textarea><div class="lb">Soal (tempel di sini)</div><textarea id="im_t" rows="8" placeholder="1. Pertanyaan ..."></textarea>';
-  h+='<details><summary><small>Format yang dibaca</small></summary><pre>'+esc(CONTOH)+'</pre><small>Minimal 3 soal, tiap soal 4 pilihan A-D dan satu kunci. Level dan Penjelasan boleh dihilangkan. Pilihan "semua di atas" dan "A dan B" ditolak karena urutan pilihan diacak.</small></details>';
-  h+='<div class="baris"><button class="p" data-act="impor">Impor sebagai draf</button></div>';
-  h+='<h3>Buat dengan AI</h3><div class="lb">Mapel</div>'+pilMapel('ai_m')+'<div class="lb">Kelas</div><input id="ai_k" maxlength="30" placeholder="Kelas 7">';
-  h+='<div class="lb">Topik</div><input id="ai_t" maxlength="120" placeholder="mis. Pecahan senilai"><div class="lb">Jumlah soal (3-10)</div><input id="ai_n" type="number" min="3" max="10" value="10">';
-  h+='<div class="baris"><button class="p" data-act="aiDraf">Buat draf</button></div><small>Jatah AI per guru dibatasi per hari. Hasil selalu berupa draf yang harus Anda periksa.</small>';
+  h+='<h3>Tambah soal</h3><div class="baris"><button class="p" data-act="pilAI">Soal dari AI</button><button class="p" data-act="pilImpor">Soal impor manual</button></div><div id="formD"></div>';
   h+='<div id="hasilK" class="hasil" style="display:none"></div>';
   el('kb').innerHTML=h;el('kartu').scrollTop=0;
  });
@@ -490,7 +541,7 @@ function bukaEditor(pk){
  DRF=pk;var ed=(pk.status==='draf'||pk.status==='ditolak'),L='ABCD';
  var h='<div class="baris"><button class="s2" data-act="mDraf">← Daftar</button></div><p>'+esc(pk.paket_id)+' · '+esc(KODE_NAMA[pk.mapel]||pk.mapel)+' · <b>'+esc(pk.status)+'</b></p>';
  if(!ed){
-  h+='<p><small>Paket ini tampil di semua meja '+esc(KODE_NAMA[pk.mapel]||pk.mapel)+'. Tarik dulu untuk menyunting (tidak bisa bila sudah ada jawaban siswa).</small></p><h3>'+esc(pk.judul)+'</h3>';
+  h+='<p><small>Paket ini dibagikan ke '+esc(namaMeja(pk.mapel))+'. Tarik dulu untuk menyunting (tidak bisa bila sudah ada jawaban siswa).</small></p><h3>'+esc(pk.judul)+'</h3>';
   String(pk.modul).split('\n\n').forEach(function(p){h+='<p>'+esc(p)+'</p>';});
   pk.soal.forEach(function(s){h+='<div class="sd"><b>'+esc(s.no)+'.</b> '+esc(s.pertanyaan)+' <small>['+esc(s.level||'-')+']</small>'+s.opsi.map(function(o,i){return '<div>'+(L.charAt(i)===s.kunci?'✓ ':'')+L.charAt(i)+'. '+esc(o)+'</div>';}).join('')+(s.penjelasan?'<small>'+esc(s.penjelasan)+'</small>':'')+'</div>';});
   h+='<div class="baris"><button class="p" data-act="tarikD">Tarik dari meja</button></div>';
@@ -503,7 +554,7 @@ function bukaEditor(pk){
    h+='<div style="flex:1"><div class="lb">Level</div><select class="lv">'+['','LOTS','MOTS','HOTS'].map(function(k){return '<option value="'+k+'"'+(k===s.level?' selected':'')+'>'+(k||'-')+'</option>';}).join('')+'</select></div></div>';
    h+='<div class="lb">Penjelasan</div><input class="pn" maxlength="400" value="'+esc(s.penjelasan)+'"><label><input type="checkbox" class="bc"> Buang soal ini</label></div>';
   });
-  h+='<div class="baris"><button class="p" data-act="simpanD">Simpan</button><button class="p" data-act="setujuD">Setujui &amp; tampilkan di meja</button></div>';
+  h+='<div class="baris"><button class="p" data-act="simpanD">Simpan</button><button class="p" data-act="setujuD">Bagikan ke '+esc(namaMeja(pk.mapel))+'</button></div>';
   h+='<div class="baris"><button class="s2" data-act="tolakD">Buang paket</button></div>';
  }
  h+='<div id="hasilK" class="hasil" style="display:none"></div>';
@@ -520,9 +571,17 @@ function aksiDraf(a,b){
  if(a==='mMeja'){bukaMeja();return true;}
  if(a==='mKelola'){bukaKelola();return true;}
  if(a==='mDraf'){bukaDraf();return true;}
+ if(a==='pilImpor'||a==='pilAI'){el('formD').innerHTML=(a==='pilAI'?formAI():formImpor());if(a==='pilImpor'){el('im_f').onchange=function(){bacaBerkas(this.files&&this.files[0]);this.value='';};}else{var f=el('formD').querySelector('input,textarea');if(f)f.focus();}return true;}
+ if(a==='unduhT'){
+  var kd=el('im_m')?el('im_m').value:'MATH',bl=new Blob(['\uFEFF'+buatTemplate(kd)],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(bl),ln=document.createElement('a');
+  ln.href=u;ln.download='template_soal_'+kd.toLowerCase()+'.txt';document.body.appendChild(ln);ln.click();document.body.removeChild(ln);setTimeout(function(){URL.revokeObjectURL(u);},4000);
+  tampilHasil('Template diunduh. Isi di komputer (Notepad atau Word, simpan sebagai .txt), lalu unggah lewat Unggah template.');return true;
+ }
+ if(a==='unggahT'){el('im_f').click();return true;}
  if(a==='bukaD'){gs('ambilDraf',{paket_id:b.getAttribute('data-p')}).then(function(j){if(j&&j.ok)bukaEditor(j);else tampilHasil(galatSoal(j));});return true;}
  if(a==='impor'){
-  b.disabled=true;tampilHasil('Memeriksa soal…');
+  if(!el('im_t').value.trim()){tampilHasil('<span class="err">Unggah template yang sudah diisi dulu.</span>');return true;}
+  b.disabled=true;tampilHasil('Mengirim dan memeriksa soal…');
   gs('imporSoal',{mapel:el('im_m').value,judul:el('im_j').value,modul:el('im_mod').value,teks:el('im_t').value}).then(function(j){b.disabled=false;if(j&&j.ok){bukaEditor(j);tampilHasil('Tersimpan sebagai draf.'+(j.peringatan?'<br><small>'+j.peringatan.map(esc).join('<br>')+'</small>':''));}else tampilHasil(galatSoal(j));});
   return true;
  }
@@ -536,11 +595,11 @@ function aksiDraf(a,b){
   return true;
  }
  if(a==='setujuD'){
-  if(!window.confirm('Setujui paket ini? Siswa langsung melihatnya di semua meja '+(KODE_NAMA[DRF.mapel]||DRF.mapel)+'.'))return true;
+  if(!window.confirm('Bagikan paket ini ke '+namaMeja(DRF.mapel)+'? Siswa langsung melihatnya di meja itu saja, tidak di meja mapel lain.'))return true;
   b.disabled=true;
   gs('simpanDraf',ambilEditor()).then(function(j){
    if(!j||!j.ok){b.disabled=false;tampilHasil(galatSoal(j));return null;}
-   return gs('setujuiDraf',{paket_id:DRF.paket_id}).then(function(j2){if(j2&&j2.ok){bukaEditor(j2);tampilHasil('Disetujui. Soal tampil di meja '+esc(KODE_NAMA[j2.mapel]||j2.mapel)+'. Siswa yang sedang membuka panel melihatnya setelah membuka ulang.');}else{b.disabled=false;tampilHasil(galatSoal(j2));}});
+   return gs('setujuiDraf',{paket_id:DRF.paket_id}).then(function(j2){if(j2&&j2.ok){bukaEditor(j2);tampilHasil('Dibagikan ke '+esc(namaMeja(j2.mapel))+'. Siswa yang sedang membuka panel melihatnya setelah membuka ulang.');}else{b.disabled=false;tampilHasil(galatSoal(j2));}});
   });
   return true;
  }
