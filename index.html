@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kelas Raudhah v0.10.1</title>
+<title>Kelas Raudhah v0.10.3</title>
 <style>
 :root{--bg:#f4f1ea;--fg:#1f2933;--card:#ffffff;--ac:#2f6f4f;--mut:#5f6b76}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1f23;--fg:#eef1f4;--card:#262c32;--ac:#6fcf97;--mut:#a3adb8}}
@@ -56,7 +56,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:
 
 <script>
 (function(){
-var VERSI='v0.10.1', bagian='awal', srv='';
+var VERSI='v0.10.3', bagian='awal', srv='';
 var API_URL='https://script.google.com/macros/s/AKfycbxhPo2-GvJClHxNav_TMjN4sFiLCzyi8yTFvbIQT62yUQ8NPBaAaIZCbTN5fmN85qc/exec';
 var GOOGLE_CLIENT_ID='503152505847-niasbva2uksvum09lsm85j8pursok0b8.apps.googleusercontent.com';
 var sentuh=('ontouchstart' in window)||(navigator.maxTouchPoints>0);
@@ -314,7 +314,7 @@ function tutupLogin(){
 }
 function renderHud(){
  var h=el('hud');if(!SAYA){h.style.display='none';return;}
- h.style.display='flex';el('hudT').textContent=SAYA.nama+' · '+SAYA.peran+(SAYA.peran==='siswa'?' · Poin '+SAYA.poin:'');
+ h.style.display='flex';el('hudT').textContent=(SAYA.juri?'Juri · ':SAYA.nama+' · ')+SAYA.peran+(SAYA.juri&&SAYA.peran==='siswa'?' ('+SAYA.nama+')':'')+(SAYA.peran==='siswa'?' · Poin '+SAYA.poin:'');
  el('hudK').style.display=(SAYA.peran==='siswa')?'none':'inline';el('hudP').style.display=(SAYA.peran==='siswa')?'inline':'none';
 }
 function setelahMasuk(j){
@@ -336,18 +336,30 @@ function muatGoogle(){
 }
 function bangunMasuk(){
  var o=document.createElement('div');o.id='ovl';
- o.innerHTML='<div class="kt"><h2>Kelas Raudhah</h2><p>Kelas virtual 3D untuk belajar Math, Science, Bahasa, Agama, dan Seni. Masuk untuk memulai belajar.</p><input id="lu" placeholder="Username atau email" autocomplete="username" autocapitalize="none"><input id="ls" type="password" placeholder="Sandi" autocomplete="current-password"><button id="lm">Masuk</button><p class="atau">atau</p><div id="gbtn"></div><p id="gnote" class="atau" style="display:none">Login Google belum diaktifkan. Gunakan akun sandi.</p><button id="ld" type="button" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">Daftar siswa baru</button><div id="kodeBox" style="display:none"><p>Akun Google belum terdaftar. Masukkan kode kelas dari guru:</p><input id="lk" placeholder="Kode kelas" maxlength="12"><button id="lk2" style="margin-top:8px;width:100%">Gabung</button></div><p id="lerr" class="err"></p><div id="dBox" style="display:none;flex-direction:column;gap:8px"><p><b>Daftar akun siswa</b></p><input id="dl" placeholder="Nama lengkap" maxlength="60" autocomplete="name"><input id="dp" placeholder="Nama pendek (tampil di avatar)" maxlength="20"><input id="dk" placeholder="Kode kelas dari guru" maxlength="12" autocomplete="off" autocapitalize="characters"><input id="de" type="email" placeholder="Email" autocomplete="username"><input id="dsk" placeholder="Asal sekolah" maxlength="60"><input id="ds" type="password" placeholder="Kata sandi (min. 8 karakter)" maxlength="64" autocomplete="new-password"><input id="ds2" type="password" placeholder="Ulangi kata sandi" maxlength="64" autocomplete="new-password"><button id="dg" type="button">Daftar</button><button id="db" type="button" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">Kembali</button></div><p class="atau"><a href="privasi.html" target="_blank" rel="noopener">Kebijakan Privasi</a> · <a href="syarat.html" target="_blank" rel="noopener">Ketentuan Layanan</a></p></div>';
+ o.innerHTML='<div class="kt"><h2>Kelas Raudhah</h2><p>Kelas virtual 3D untuk belajar Math, Science, Bahasa, Agama, dan Seni. Masuk untuk memulai belajar.</p><input id="lu" placeholder="Username atau email" autocomplete="username" autocapitalize="none"><input id="ls" type="password" placeholder="Sandi" autocomplete="current-password"><button id="lm">Masuk</button><p class="atau">atau</p><div id="gbtn"></div><p id="gnote" class="atau" style="display:none">Login Google belum diaktifkan. Gunakan akun sandi.</p><button id="ld" type="button" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">Daftar siswa baru</button><button id="lj" type="button" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">Menu Juri</button><div id="kodeBox" style="display:none"><p>Akun Google belum terdaftar. Masukkan kode kelas dari guru:</p><input id="lk" placeholder="Kode kelas" maxlength="12"><button id="lk2" style="margin-top:8px;width:100%">Gabung</button></div><p id="lerr" class="err"></p><div id="dBox" style="display:none;flex-direction:column;gap:8px"><p><b>Daftar akun siswa</b></p><input id="dl" placeholder="Nama lengkap" maxlength="60" autocomplete="name"><input id="dp" placeholder="Nama pendek (tampil di avatar)" maxlength="20"><input id="dk" placeholder="Kode kelas dari guru" maxlength="12" autocomplete="off" autocapitalize="characters"><input id="de" type="email" placeholder="Email" autocomplete="username"><input id="dsk" placeholder="Asal sekolah" maxlength="60"><input id="ds" type="password" placeholder="Kata sandi (min. 8 karakter)" maxlength="64" autocomplete="new-password"><input id="ds2" type="password" placeholder="Ulangi kata sandi" maxlength="64" autocomplete="new-password"><button id="dg" type="button">Daftar</button><button id="db" type="button" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">Kembali</button></div><div id="jBox" style="display:none;flex-direction:column;gap:8px"><p><b>Menu Juri</b></p><p><small>Masuk langsung untuk menilai aplikasi, tanpa pendaftaran dan tanpa kode kelas. Akun juri hanya untuk demo: data siswa juri direset tiap masuk dan paket soal tidak dibagikan ke siswa asli.</small></p><button id="jrG" type="button">Masuk sebagai Guru</button><button id="jrS" type="button">Masuk sebagai Siswa</button><button id="jrB" type="button" style="background:transparent;color:var(--ac);border:1px solid var(--ac)">Kembali</button></div><p class="atau"><a href="privasi.html" target="_blank" rel="noopener">Kebijakan Privasi</a> · <a href="syarat.html" target="_blank" rel="noopener">Ketentuan Layanan</a></p></div>';
  document.body.appendChild(o);
  var hd=document.createElement('div');hd.id='hud';hd.innerHTML='<span id="hudT"></span><button id="hudP">Progres</button><button id="hudK">Kelola</button><button id="hudX">Keluar</button>';document.body.appendChild(hd);
  function masukSandi(){lerr('');el('lm').disabled=true;gs('masukSandi',{username:el('lu').value,sandi:el('ls').value}).then(function(j){el('lm').disabled=false;if(j&&j.ok)setelahMasuk(j);else lerr(j&&j.error);});}
  el('lm').onclick=masukSandi;el('ls').addEventListener('keydown',function(e){if(e.key==='Enter')masukSandi();});el('lu').addEventListener('keydown',function(e){if(e.key==='Enter')masukSandi();});
  el('lk2').onclick=function(){kirimGoogle(el('lk').value);};
- function modeDaftar(on){
-  el('dBox').style.display=on?'flex':'none';lerr('');
+ function modeLayar(m){
+  el('dBox').style.display=m==='daftar'?'flex':'none';el('jBox').style.display=m==='juri'?'flex':'none';lerr('');
   var kids=el('ovl').querySelector('.kt').children;
-  for(var i=0;i<kids.length;i++){var k=kids[i];if(k.id==='dBox'||k.id==='lerr'||k.tagName==='H2')continue;k.style.display=on?'none':'';}
-  if(!on){el('kodeBox').style.display='none';el('gnote').style.display=GOOGLE_CLIENT_ID?'none':'block';}
+  for(var i=0;i<kids.length;i++){var k=kids[i];if(k.id==='dBox'||k.id==='jBox'||k.id==='lerr'||k.tagName==='H2')continue;k.style.display=m?'none':'';}
+  if(!m){el('kodeBox').style.display='none';el('gnote').style.display=GOOGLE_CLIENT_ID?'none':'block';}
  }
+ function modeDaftar(on){modeLayar(on?'daftar':'');}
+ function masukJuri(sbg){
+  lerr('');el('jrG').disabled=true;el('jrS').disabled=true;
+  gs('masukJuri',{sebagai:sbg}).then(function(j){
+   el('jrG').disabled=false;el('jrS').disabled=false;
+   if(j&&j.ok){modeLayar('');setelahMasuk(j);}else lerr(j&&j.error);
+  });
+ }
+ el('lj').onclick=function(){modeLayar('juri');};
+ el('jrB').onclick=function(){modeLayar('');};
+ el('jrG').onclick=function(){masukJuri('guru');};
+ el('jrS').onclick=function(){masukJuri('siswa');};
  el('ld').onclick=function(){modeDaftar(true);};
  el('db').onclick=function(){modeDaftar(false);};
  el('dg').onclick=function(){
@@ -418,9 +430,14 @@ function tampilProgresKelas(j){
  if(!j.kelas.length)h='<p><small>Belum ada kelas.</small></p>';
  d.innerHTML=h;
 }
-function renderLatihan(j){
- LAT=j;var h='',lat=null;
- j.materi.forEach(function(m){if(m.jenis==='Modul'){h+='<h3>'+esc(m.judul)+'</h3>'+String(m.isi).split('\n\n').map(function(p){return '<p>'+esc(p)+'</p>';}).join('');}if(m.jenis==='Latihan')lat=m;});
+function renderLatihan(j,pilih){
+ LAT=j;var h='',lat=null,lats=[];
+ j.materi.forEach(function(m){if(m.jenis==='Latihan')lats.push(m);});
+ if(lats.length){lat=lats[lats.length-1];for(var q=0;q<lats.length;q++){var lengkap=true;j.soal.forEach(function(s){if(s.materi_id===lats[q].materi_id&&j.jawaban[s.soal_id]===undefined)lengkap=false;});if(!lengkap){lat=lats[q];break;}}}
+ if(pilih){lats.forEach(function(m){if(m.materi_id===pilih)lat=m;});}
+ if(lats.length>1){h+='<div class="baris">'+lats.map(function(m){return '<button class="'+(lat&&m.materi_id===lat.materi_id?'p':'s2')+'" data-act="pilLat" data-m="'+esc(m.materi_id)+'">'+esc(m.judul)+'</button>';}).join('')+'</div>';}
+ var pk=lat?String(lat.paket_id||''):'';
+ j.materi.forEach(function(m){if(m.jenis==='Modul'&&(!lat||String(m.paket_id||'')===pk)){h+='<h3>'+esc(m.judul)+'</h3>'+String(m.isi).split('\n\n').map(function(p){return '<p>'+esc(p)+'</p>';}).join('');}});
  if(lat){
   h+='<h3>'+esc(lat.judul)+'</h3><p><small>'+esc(lat.isi)+' Poin hanya dari jawaban pertama. Jawaban yang sudah dikirim tidak bisa diubah; kamu boleh kembali untuk melihatnya.</small></p><p id="noS"></p><div id="chipS"></div>';
   j.soal.forEach(function(s){
@@ -467,9 +484,10 @@ function bukaKelola(){
   if(!j||!j.ok){el('kb').innerHTML='<p class="err">'+esc(j&&j.error||'Gagal.')+'</p>';return;}
   var h='<div class="baris"><button class="p" data-act="mDraf">Soal &amp; draf</button></div><h3>Kelas</h3>';
   if(!j.kelas.length)h+='<p><small>Belum ada kelas.</small></p>';
-  j.kelas.forEach(function(k){h+='<p>'+esc(k.nama_kelas)+' · kode <b>'+esc(k.kode_kelas)+'</b> · '+esc(k.kelas_id)+'</p>';});
-  h+='<h3>Buat kelas</h3><div class="baris"><input id="kn" placeholder="Nama kelas, mis. 7A"><button class="p" data-act="buatKelas">Buat</button></div>';
-  h+='<h3>Buat akun sandi siswa</h3><div class="baris"><select id="kk">'+j.kelas.map(function(k){return '<option value="'+esc(k.kelas_id)+'">'+esc(k.nama_kelas)+'</option>';}).join('')+'</select></div><div class="baris"><input id="ksn" placeholder="Nama siswa"><button class="p" data-act="akunSiswa">Buat</button></div>';
+  j.kelas.forEach(function(k){h+='<p>'+esc(k.nama_kelas)+(SAYA.juri?' · kelas demo juri':' · kode <b>'+esc(k.kode_kelas)+'</b>')+' · '+esc(k.kelas_id)+'</p>';});
+  if(SAYA.juri)h+='<p><small>Akun juri tidak dapat membuat kelas atau akun baru. Siswa juri otomatis ada di Kelas Juri; lihat progresnya di bawah.</small></p>';
+  if(!SAYA.juri)h+='<h3>Buat kelas</h3><div class="baris"><input id="kn" placeholder="Nama kelas, mis. 7A"><button class="p" data-act="buatKelas">Buat</button></div>';
+  if(!SAYA.juri)h+='<h3>Buat akun sandi siswa</h3><div class="baris"><select id="kk">'+j.kelas.map(function(k){return '<option value="'+esc(k.kelas_id)+'">'+esc(k.nama_kelas)+'</option>';}).join('')+'</select></div><div class="baris"><input id="ksn" placeholder="Nama siswa"><button class="p" data-act="akunSiswa">Buat</button></div>';
   if(SAYA.peran==='pemilik'){
    h+='<h3>Akun guru (pemilik)</h3><div class="baris"><input id="gsn" placeholder="Nama guru"><button class="p" data-act="akunGuru">Akun sandi</button></div>';
    h+='<div class="baris"><input id="ge" placeholder="Email Google guru"><input id="gn" placeholder="Nama"><button class="p" data-act="tambahGuru">Tambah</button></div>';
@@ -481,6 +499,11 @@ function bukaKelola(){
 }
 var DRF=null,CONTOH='1. Hasil dari 1/2 + 1/4 adalah ...\nA. 3/4\nB. 2/6\nC. 1/6\nD. 2/4\nKunci: A\nLevel: LOTS\nPenjelasan: Samakan penyebut dulu.\n\n2. Soal berikutnya ...\nA. ...\nB. ...\nC. ...\nD. ...\nKunci: C';
 function pilMapel(id){return '<select id="'+id+'">'+Object.keys(KODE_NAMA).map(function(k){return '<option value="'+k+'">'+esc(KODE_NAMA[k])+'</option>';}).join('')+'</select>';}
+function segarStatusAI(){
+ var d=el('aiSt');if(!d)return;d.textContent='Memuat status AI…';
+ gs('statusAI').then(function(j){if(!el('aiSt'))return;if(!j||!j.ok){el('aiSt').textContent='';return;}
+  el('aiSt').innerHTML=j.slot.length?'Penyedia AI hari ini (berurutan): '+j.slot.map(function(s){return esc(s.id)+' '+s.terpakai+'/'+s.batas+(s.istirahat?' (istirahat)':'');}).join(' · ')+'. Bila satu penuh atau gagal, otomatis pindah ke berikutnya.':'<span class="err">Belum ada penyedia AI diatur di server.</span>';});
+}
 function galatSoal(j){var t='<span class="err">'+esc(j&&j.error||'Gagal.')+'</span>';if(j&&j.masalah&&j.masalah.length)t+='<br><small>'+j.masalah.map(esc).join('<br>')+'</small>';return t;}
 function namaMeja(k){return 'Meja '+(KODE_NAMA[k]||k);}
 function kodeMapel(t){t=String(t||'').trim().toLowerCase();var r='';Object.keys(KODE_NAMA).forEach(function(k){if(k.toLowerCase()===t||KODE_NAMA[k].toLowerCase()===t)r=k;});return r;}
@@ -537,7 +560,7 @@ function formAI(){
  var h='';
   h+='<h3>Soal dari AI</h3><div class="lb">Mapel</div>'+pilMapel('ai_m')+'<div class="lb">Kelas</div><input id="ai_k" maxlength="30" placeholder="Kelas 7">';
   h+='<div class="lb">Topik</div><input id="ai_t" maxlength="120" placeholder="mis. Pecahan senilai"><div class="lb">Jumlah soal (3-10)</div><input id="ai_n" type="number" min="3" max="10" value="10">';
-  h+='<div class="baris"><button class="p" data-act="aiDraf">Buat draf</button></div><small>Jatah AI per guru dibatasi per hari. Hasil selalu berupa draf yang harus Anda periksa.</small>';
+  h+='<div class="baris"><button class="p" data-act="aiDraf">Buat draf</button></div><small>Jatah AI per guru dibatasi per hari. Hasil selalu berupa draf yang harus Anda periksa.</small><div id="aiSt" class="lb"></div>';
  return h;
 }
 function bukaDraf(){
@@ -557,10 +580,10 @@ function bukaEditor(pk){
  DRF=pk;var ed=(pk.status==='draf'||pk.status==='ditolak'),L='ABCD';
  var h='<div class="baris"><button class="s2" data-act="mDraf">← Daftar</button></div><p>'+esc(pk.paket_id)+' · '+esc(KODE_NAMA[pk.mapel]||pk.mapel)+' · <b>'+esc(pk.status)+'</b></p>';
  if(!ed){
-  h+='<p><small>Paket ini dibagikan ke '+esc(namaMeja(pk.mapel))+'. Tarik dulu untuk menyunting (tidak bisa bila sudah ada jawaban siswa).</small></p><h3>'+esc(pk.judul)+'</h3>';
+  h+=(pk.status==='arsip'?'<p><small>Paket ini diarsipkan (tidak tampil di meja). Jadikan draf lagi bila ingin memakainya kembali.</small></p>':'<p><small>Paket ini dibagikan ke '+esc(namaMeja(pk.mapel))+'. Tarik dulu untuk menyunting (tidak bisa bila sudah ada jawaban siswa).</small></p>')+'<h3>'+esc(pk.judul)+'</h3>';
   String(pk.modul).split('\n\n').forEach(function(p){h+='<p>'+esc(p)+'</p>';});
   pk.soal.forEach(function(s){h+='<div class="sd"><b>'+esc(s.no)+'.</b> '+esc(s.pertanyaan)+' <small>['+esc(s.level||'-')+']</small>'+s.opsi.map(function(o,i){return '<div>'+(L.charAt(i)===s.kunci?'✓ ':'')+L.charAt(i)+'. '+esc(o)+'</div>';}).join('')+(s.penjelasan?'<small>'+esc(s.penjelasan)+'</small>':'')+'</div>';});
-  h+='<div class="baris"><button class="p" data-act="tarikD">Tarik dari meja</button></div>';
+  h+=(pk.status==='arsip'?'<div class="baris"><button class="p" data-act="pulihD">Jadikan draf lagi</button></div>':'<div class="baris"><button class="p" data-act="tarikD">Tarik dari meja</button></div>');
  }else{
   h+='<div class="lb">Judul</div><input id="ed_j" maxlength="80" value="'+esc(pk.judul)+'"><div class="lb">Modul</div><textarea id="ed_m" rows="8">'+esc(pk.modul)+'</textarea>';
   pk.soal.forEach(function(s){
@@ -570,7 +593,8 @@ function bukaEditor(pk){
    h+='<div style="flex:1"><div class="lb">Level</div><select class="lv">'+['','LOTS','MOTS','HOTS'].map(function(k){return '<option value="'+k+'"'+(k===s.level?' selected':'')+'>'+(k||'-')+'</option>';}).join('')+'</select></div></div>';
    h+='<div class="lb">Penjelasan</div><input class="pn" maxlength="400" value="'+esc(s.penjelasan)+'"><label><input type="checkbox" class="bc"> Buang soal ini</label></div>';
   });
-  h+='<div class="baris"><button class="p" data-act="simpanD">Simpan</button><button class="p" data-act="setujuD">Bagikan ke '+esc(namaMeja(pk.mapel))+'</button></div>';
+  h+='<label class="lb"><input type="checkbox" id="ed_g" checked> Gantikan paket lama di '+esc(namaMeja(pk.mapel))+' (paket lama diarsipkan, riwayat poin tetap aman)</label>';
+  h+='<div class="baris"><button class="p" data-act="simpanD">Simpan</button>'+((SAYA.juri&&!SAYA.juriBagikan)?'':'<button class="p" data-act="setujuD">Bagikan ke '+esc(namaMeja(pk.mapel))+'</button>')+'</div>'+((SAYA.juri&&!SAYA.juriBagikan)?'<p><small>Mode juri: paket disimpan sebagai draf dan tidak dibagikan ke siswa asli.</small></p>':'');
   h+='<div class="baris"><button class="s2" data-act="tolakD">Buang paket</button></div>';
  }
  h+='<div id="hasilK" class="hasil" style="display:none"></div>';
@@ -587,7 +611,7 @@ function aksiDraf(a,b){
  if(a==='mMeja'){bukaMeja();return true;}
  if(a==='mKelola'){bukaKelola();return true;}
  if(a==='mDraf'){bukaDraf();return true;}
- if(a==='pilImpor'||a==='pilAI'){el('formD').innerHTML=(a==='pilAI'?formAI():formImpor());if(a==='pilImpor'){el('im_f').onchange=function(){bacaBerkas(this.files&&this.files[0]);this.value='';};}else{var f=el('formD').querySelector('input,textarea');if(f)f.focus();}return true;}
+ if(a==='pilImpor'||a==='pilAI'){el('formD').innerHTML=(a==='pilAI'?formAI():formImpor());if(a==='pilImpor'){el('im_f').onchange=function(){bacaBerkas(this.files&&this.files[0]);this.value='';};}else{var f=el('formD').querySelector('input,textarea');if(f)f.focus();}if(a==='pilAI')segarStatusAI();return true;}
  if(a==='unduhT'){
   var kd=el('im_m')?el('im_m').value:'MATH',bl=new Blob(['\uFEFF'+buatTemplate(kd)],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(bl),ln=document.createElement('a');
   ln.href=u;ln.download='template_soal_'+kd.toLowerCase()+'.txt';document.body.appendChild(ln);ln.click();document.body.removeChild(ln);setTimeout(function(){URL.revokeObjectURL(u);},4000);
@@ -603,7 +627,7 @@ function aksiDraf(a,b){
  }
  if(a==='aiDraf'){
   b.disabled=true;tampilHasil('Menyusun draf… bisa sampai 1 menit. Jangan tutup panel.');
-  gs('buatDraf',{mapel:el('ai_m').value,kelas:el('ai_k').value,topik:el('ai_t').value,jumlah:Number(el('ai_n').value)}).then(function(j){b.disabled=false;if(j&&j.ok){bukaEditor(j);tampilHasil('Draf AI tersimpan. Periksa semua soal sebelum disetujui. Sisa jatah hari ini: '+esc(j.sisaJatah));}else tampilHasil(galatSoal(j));});
+  gs('buatDraf',{mapel:el('ai_m').value,kelas:el('ai_k').value,topik:el('ai_t').value,jumlah:Number(el('ai_n').value)}).then(function(j){b.disabled=false;if(j&&j.ok){bukaEditor(j);tampilHasil('Draf AI tersimpan. Periksa semua soal sebelum disetujui. Sisa jatah hari ini: '+esc(j.sisaJatah)+(j.slot?' · Penyedia: '+esc(j.slot):''));}else tampilHasil(galatSoal(j));});
   return true;
  }
  if(a==='simpanD'){
@@ -611,13 +635,13 @@ function aksiDraf(a,b){
   return true;
  }
  if(a==='setujuD'){
-  var nS=0;Array.prototype.forEach.call(document.querySelectorAll('#kb .sd[data-s]'),function(x){var c=x.querySelector('.bc');if(!(c&&c.checked))nS++;});
+  var gt=!(el('ed_g')&&!el('ed_g').checked),nS=0;Array.prototype.forEach.call(document.querySelectorAll('#kb .sd[data-s]'),function(x){var c=x.querySelector('.bc');if(!(c&&c.checked))nS++;});
   if(nS!==10){tampilHasil('<span class="err">Paket harus tepat 10 soal untuk dibagikan (sekarang '+nS+'). Buat ulang paketnya dengan 10 soal.</span>');return true;}
-  if(!window.confirm('Bagikan paket ini ke '+namaMeja(DRF.mapel)+'? Siswa langsung melihatnya di meja itu saja, tidak di meja mapel lain.'))return true;
+  if(!window.confirm('Bagikan paket ini ke '+namaMeja(DRF.mapel)+'? Siswa langsung melihatnya di meja itu saja, tidak di meja mapel lain.'+(gt?' Paket lama di mapel ini akan diarsipkan.':'')))return true;
   b.disabled=true;
   gs('simpanDraf',ambilEditor()).then(function(j){
    if(!j||!j.ok){b.disabled=false;tampilHasil(galatSoal(j));return null;}
-   return gs('setujuiDraf',{paket_id:DRF.paket_id}).then(function(j2){if(j2&&j2.ok){bukaEditor(j2);tampilHasil('Dibagikan ke '+esc(namaMeja(j2.mapel))+'. Siswa yang sedang membuka panel melihatnya setelah membuka ulang.');}else{b.disabled=false;tampilHasil(galatSoal(j2));}});
+   return gs('setujuiDraf',{paket_id:DRF.paket_id,gantikan:gt}).then(function(j2){if(j2&&j2.ok){bukaEditor(j2);tampilHasil('Dibagikan ke '+esc(namaMeja(j2.mapel))+'.'+(j2.diganti&&j2.diganti.length?' Paket lama diarsipkan: '+j2.diganti.map(esc).join(', ')+'.':'')+' Siswa yang sedang membuka panel melihatnya setelah membuka ulang.');}else{b.disabled=false;tampilHasil(galatSoal(j2));}});
   });
   return true;
  }
@@ -629,6 +653,10 @@ function aksiDraf(a,b){
  if(a==='tarikD'){
   if(!window.confirm('Tarik paket ini dari meja dan kembalikan ke draf?'))return true;
   gs('tarikDraf',{paket_id:DRF.paket_id}).then(function(j){if(j&&j.ok){bukaEditor(j);tampilHasil('Ditarik dari meja. Sekarang berstatus draf.');}else tampilHasil(galatSoal(j));});
+  return true;
+ }
+ if(a==='pulihD'){
+  gs('pulihkanDraf',{paket_id:DRF.paket_id}).then(function(j){if(j&&j.ok){bukaEditor(j);tampilHasil('Dikembalikan menjadi draf. Silakan periksa lalu bagikan lagi.');}else tampilHasil(galatSoal(j));});
   return true;
  }
  return false;
@@ -661,6 +689,7 @@ function klikPanel(e){
  }
 }
 bangunMasuk();
+el('kb').addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-act="pilLat"]');if(b&&LAT)renderLatihan(LAT,b.getAttribute('data-m'));});
 function cekServer(){
  if(!API_URL){srv=' · server: belum diatur';setV(true);return;}
  var t0=Date.now(),ctl=('AbortController' in window)?new AbortController():null,to=setTimeout(function(){if(ctl)ctl.abort();},12000);
@@ -697,6 +726,6 @@ function mulai(){if(window.AFRAME){try{pasangScene();}catch(e){setV(false);}}els
 if(document.readyState==='complete')mulai();else window.addEventListener('load',mulai);
 })();
 </script>
-<!-- akhir Kelas Raudhah v0.10.1 -->
+<!-- akhir Kelas Raudhah v0.10.3 -->
 </body>
 </html>
