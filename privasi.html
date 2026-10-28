@@ -1,28 +1,86 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kebijakan Privasi - Kelas Raudhah</title>
-<style>body{font-family:system-ui,sans-serif;max-width:720px;margin:24px auto;padding:0 16px;line-height:1.6;color:#1f2d24}h1{color:#2e6b4d}a{color:#2e6b4d}</style></head><body>
+<style>
+:root{--bg:#f4f1ea;--fg:#1f2d24;--mut:#55625a;--ac:#2e6b4d;--card:#ffffff;--gar:#d6dcd3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1f23;--fg:#eef1f4;--mut:#a9b3ad;--ac:#7fd1a3;--card:#262c32;--gar:#3a434a}}
+:root[data-theme="dark"]{--bg:#1b1f23;--fg:#eef1f4;--mut:#a9b3ad;--ac:#7fd1a3;--card:#262c32;--gar:#3a434a}
+body{font-family:system-ui,sans-serif;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.6;color:var(--fg);background:var(--bg)}
+h1{color:var(--ac);line-height:1.25}h2{color:var(--ac);font-size:1.15rem;margin-top:1.6em}a{color:var(--ac)}
+small,.mut{color:var(--mut)}code{background:var(--card);padding:1px 5px;border-radius:4px}
+.tb{width:100%;border-collapse:collapse;background:var(--card);font-size:.95rem}.tb th,.tb td{border:1px solid var(--gar);padding:6px 8px;text-align:left;vertical-align:top}
+.kotak{background:var(--card);border-left:4px solid var(--ac);padding:10px 14px;border-radius:6px}
+@media (max-width:560px){.tb{font-size:.88rem}}
+</style></head><body>
 <h1>Kebijakan Privasi Kelas Raudhah</h1>
-<p><small>Terakhir diperbarui: 24 Oktober 2026 · Versi aplikasi v0.10.1</small></p>
-<p><a href="https://diahayu88.github.io/kelas_raudhah/">Kelas Raudhah</a> (RAUDHAH = Ruang Edukasi dan Digital Madrasah) adalah kelas virtual 3D di browser untuk belajar Math, Science, Bahasa, Agama, dan Seni. Aplikasi dikelola oleh pengelola Kelas Raudhah di MTsN 7 Kediri sebagai prototipe pembelajaran.</p>
+<p><small>Terakhir diperbarui: 29 Oktober 2026 · Versi aplikasi v0.15.0</small></p>
+<p><a href="https://diahayu88.github.io/kelas_raudhah/">Kelas Raudhah</a> (RAUDHAH = Ruang Edukasi dan Digital Madrasah) adalah kelas virtual 3D di browser untuk belajar Math, Science, Bahasa, Agama, dan Seni, serta mencatat kegiatan Adiwiyata madrasah. Aplikasi dikelola oleh pengelola Kelas Raudhah di MTsN 7 Kediri sebagai prototipe pembelajaran. Sebagian besar pengguna adalah siswa di bawah 18 tahun, jadi kami menyimpan data seminimal mungkin.</p>
+
 <h2>Data yang kami simpan</h2>
 <ul>
 <li><b>Masuk dengan Google:</b> alamat email dan nama akun Google Anda. Kami tidak meminta akses ke Gmail, Drive, kontak, atau data Google lainnya.</li>
-<li><b>Daftar dengan email dan sandi:</b> nama lengkap, nama pendek, asal sekolah, email, dan sandi. Sandi disimpan dalam bentuk hash (tidak dapat dibaca kembali).</li>
-<li><b>Aktivitas belajar:</b> kelas yang diikuti, jawaban latihan, poin, dan bintang. Siswa dikenali di data belajar lewat kode acak, bukan nama.</li>
-<li><b>Catatan aktivitas (log):</b> waktu dan jenis aksi penting (masuk, bergabung ke kelas, pembuatan dan persetujuan paket soal) untuk keamanan dan pemeriksaan. Sandi dan kunci tidak dicatat.</li>
+<li><b>Daftar sendiri dengan email dan sandi:</b> nama lengkap, nama pendek, asal sekolah, email (dipakai sebagai nama masuk), dan sandi. Sandi disimpan dalam bentuk hash yang tidak dapat dibaca kembali.</li>
+<li><b>Akun yang dibuat guru:</b> nama, nama masuk, dan sandi (dalam bentuk hash). Bila sandi diatur ulang, sandi lama langsung tidak berlaku.</li>
+<li><b>Aktivitas belajar:</b> kelas/rombel yang diikuti, jawaban latihan yang sudah dikumpulkan, poin, progres tiap mapel, dan riwayat penukaran poin menjadi bintang. Di data belajar, siswa dikenali lewat kode acak, bukan nama.</li>
+<li><b>Adiwiyata:</b> siswa yang ditunjuk guru sebagai kader rombel, dan catatan timbangan sampah (tanggal, rombel, jenis sampah, berat, poin rombel, pencatat, dan catatan singkat bila diisi). Poin Adiwiyata adalah milik rombel, bukan milik pribadi siswa.</li>
+<li><b>Catatan aktivitas (log):</b> waktu dan jenis aksi penting, misalnya masuk, bergabung ke kelas, membuat atau menyetujui paket soal, menukar bintang, mengubah akun atau kelas, mengunduh rekap, dan mencatat timbangan. Log dipakai untuk keamanan dan pemeriksaan. Sandi dan kunci layanan tidak pernah dicatat.</li>
 </ul>
+
 <h2>Untuk apa data dipakai</h2>
-<p>Hanya untuk mengenali akun, menentukan peran (pemilik, guru, siswa), menilai latihan, menghitung poin dan bintang, serta membantu guru memantau belajar kelasnya.</p>
-<h2>Di mana data disimpan dan siapa yang melihat</h2>
-<p>Data disimpan di Google Sheets dan Google Apps Script milik pengelola. Data tidak dijual dan tidak dibagikan kepada pihak ketiga untuk iklan. Guru hanya melihat data siswa di kelasnya sendiri. Penggunaan data dari Google mengikuti Kebijakan Data Pengguna Layanan API Google, termasuk persyaratan Penggunaan Terbatas.</p>
+<p>Data hanya dipakai untuk:</p>
+<ul>
+<li>mengenali akun dan menentukan peran (pemilik, guru, siswa);</li>
+<li>menilai latihan serta menghitung poin dan bintang;</li>
+<li>menyusun Papan Bintang dan papan rombel Adiwiyata;</li>
+<li>membantu guru memantau dan merekap belajar kelasnya.</li>
+</ul>
+<p>Data tidak dipakai untuk iklan.</p>
+
+<h2>Siapa melihat apa</h2>
+<table class="tb">
+<tr><th>Pengguna</th><th>Yang dapat dilihat</th></tr>
+<tr><td>Siswa</td><td>Data belajarnya sendiri. Di Papan Bintang, siswa melihat teman sesuai pilihan guru: nama pendek, inisial, atau disembunyikan ("Siswa 1, 2, …"). Di Adiwiyata, siswa melihat papan poin per rombel dan nama pendek kader rombelnya. Email dan kode akun teman tidak pernah dikirim ke halaman siswa.</td></tr>
+<tr><td>Guru</td><td>Siswa di kelas/rombel miliknya: nama, nama pendek, status akun, poin, bintang, dan progres. Nama masuk akun daftar mandiri ditampilkan tersamar, misalnya <code>an***@gmail.com</code>. Untuk Adiwiyata, guru dapat melihat daftar siswa rombel saat menunjuk kader, serta mencatat dan membatalkan timbangan.</td></tr>
+<tr><td>Pemilik (pengelola)</td><td>Semua kelas dan akun, pengaturan aplikasi, dan log aktivitas, karena pengelola bertanggung jawab atas layanan.</td></tr>
+</table>
+
+<h2>Rekap yang diunduh</h2>
+<p>Guru dan pemilik dapat mengunduh rekap nilai per kelas dan rekap Adiwiyata per bulan dalam bentuk berkas CSV.</p>
+<ul>
+<li><b>Isi rekap nilai:</b> nama siswa, status akun, progres tiap mapel, poin, dan bintang, tanpa email.</li>
+<li><b>Isi rekap Adiwiyata:</b> berat dan poin per rombel serta nama pendek kader.</li>
+</ul>
+<p>Setelah diunduh, berkas tersimpan di perangkat guru. Guru wajib menjaganya seperti dokumen nilai lain dan tidak membagikannya ke pihak yang tidak berwenang.</p>
+
+<h2>Di mana data disimpan</h2>
+<p>Data disimpan di Google Sheets dan Google Apps Script milik pengelola. Halaman aplikasi dilayani GitHub Pages. Data tidak dijual dan tidak dibagikan kepada pihak ketiga untuk iklan. Penggunaan data dari Google mengikuti Kebijakan Data Pengguna Layanan API Google, termasuk persyaratan Penggunaan Terbatas. Data disimpan selama akun dipakai untuk pembelajaran, atau sampai diminta dihapus.</p>
+
 <h2>Fitur AI untuk guru</h2>
-<p>Guru dapat membuat draf modul dan soal dengan bantuan AI (Google Gemini). Yang dikirim ke layanan AI hanya mata pelajaran, kelas, dan topik yang diketik guru. Data siswa (nama, email, jawaban, poin) tidak dikirim ke layanan AI. Guru diminta tidak menulis data pribadi pada topik. Draf AI tidak terlihat siswa sebelum diperiksa dan disetujui guru.</p>
+<ul>
+<li>Guru dapat membuat draf modul dan soal dengan bantuan AI: Google Gemini, atau Cloudflare Workers AI sebagai cadangan bila diaktifkan pengelola.</li>
+<li>Yang dikirim ke layanan AI hanya mata pelajaran, kelas, topik yang diketik guru, serta jumlah dan tingkat soal.</li>
+<li>Data siswa (nama, email, jawaban, poin) dan data guru tidak dikirim ke layanan AI. Guru diminta tidak menulis data pribadi pada topik.</li>
+<li>Layanan AI tingkat gratis dapat memakai isi permintaan untuk meningkatkan produknya.</li>
+<li>Draf AI tidak terlihat siswa sebelum diperiksa dan disetujui guru.</li>
+</ul>
+
+<h2>Mode VR dan sensor HP</h2>
+<p>Saat tombol <b>VR</b> dipakai, halaman membaca sensor gerak HP (giroskop) untuk menggerakkan pandangan. Data sensor itu <b>hanya diolah di perangkat</b>: tidak dikirim ke server dan tidak disimpan. Mode VR juga dapat meminta layar penuh dan menjaga layar tetap menyala selama dipakai. Semuanya berhenti saat Anda keluar dari mode VR. Di iPhone, izin sensor gerak diminta terlebih dulu dan boleh ditolak; aplikasi tetap bisa dipakai dengan menggeser layar.</p>
+
 <h2>Penyimpanan di perangkat</h2>
-<p>Token sesi masuk disimpan sementara di <code>sessionStorage</code> browser dan hilang saat tab ditutup atau Anda keluar.</p>
+<ul>
+<li><code>sessionStorage</code>: token sesi masuk. Token hilang saat tab ditutup atau Anda keluar, dan berakhir sendiri setelah paling lama 6 jam.</li>
+<li><code>localStorage</code>: pilihan kualitas grafis (Otomatis/Tinggi/Hemat) saja.</li>
+<li>Tidak ada cookie iklan. Tombol masuk Google memuat skrip resmi Google Identity Services dari <code>accounts.google.com</code>.</li>
+</ul>
+
+<h2>Akun juri</h2>
+<p>Menu Juri menyediakan akun demonstrasi untuk penilai aplikasi. Akun ini tanpa sandi dan tanpa data pribadi. Data latihan akun juri siswa direset setiap kali masuk, dan akun juri tidak dapat mengubah data siswa asli.</p>
+
 <h2>Hak Anda</h2>
-<p>Anda dapat meminta data akun dilihat, diperbaiki, atau dihapus dengan menghubungi pengelola: <b>addinanayu@gmail.com</b>. Untuk siswa, permintaan dapat disampaikan melalui guru.</p>
+<p>Anda dapat meminta data akun dilihat, diperbaiki, atau dihapus dengan menghubungi pengelola: <b>addinanayu@gmail.com</b>. Untuk siswa, permintaan dapat disampaikan melalui guru atau orang tua/wali.</p>
+
 <h2>Perubahan</h2>
-<p>Kebijakan ini dapat diperbarui. Tanggal pembaruan tercantum di bagian atas halaman.</p>
-<p><a href="./">&larr; Kembali ke Kelas Raudhah</a></p>
+<p>Kebijakan ini dapat diperbarui. Tanggal dan versi aplikasi tercantum di bagian atas halaman.</p>
+<p><a href="syarat.html">Ketentuan Layanan</a> · <a href="./">&larr; Kembali ke Kelas Raudhah</a></p>
 </body></html>
