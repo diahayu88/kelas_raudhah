@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kelas Raudhah v0.15.0</title>
+<title>Kelas Raudhah v0.15.1</title>
 <style>
 :root{--bg:#f4f1ea;--fg:#1f2933;--card:#ffffff;--ac:#2f6f4f;--mut:#5f6b76;--emas:#7a5600}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1f23;--fg:#eef1f4;--card:#262c32;--ac:#6fcf97;--mut:#a3adb8;--emas:#f0c35a}}
@@ -32,8 +32,8 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:
 #ovl button,#kb button.p{padding:10px;border:0;border-radius:10px;background:var(--ac);color:#fff;font-size:15px;cursor:pointer}
 #gbtn{display:flex;justify-content:center;margin:2px 0}.err{color:#b3261e}.atau{text-align:center;color:var(--mut);font-size:13px}
 #hint{top:calc(52px + env(safe-area-inset-top,0px));left:auto;right:8px;transform:none;text-align:left;max-width:min(300px,80vw);display:none;line-height:1.45}#hint.on{display:block}#hintBtn{position:fixed;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:21;width:44px;height:44px;border-radius:50%;border:0;background:var(--card);color:var(--ac);font-size:22px;font-weight:700;line-height:44px;padding:0;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.25)}
-#hud{position:fixed;left:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:22;display:none;gap:8px;align-items:center;background:var(--card);color:var(--fg);padding:5px 10px;border-radius:14px;font-size:13px}
-#hud button{border:0;background:transparent;color:var(--ac);cursor:pointer;font-size:13px;text-decoration:underline;padding:0}
+#hud{position:fixed;left:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:22;display:none;gap:0 8px;align-items:center;flex-wrap:wrap;max-width:calc(100vw - 76px - env(safe-area-inset-right,0px));box-sizing:border-box;background:var(--card);color:var(--fg);padding:5px 10px;border-radius:14px;font-size:13px}
+#hud button{border:0;background:transparent;color:var(--ac);cursor:pointer;font-size:13px;text-decoration:underline;padding:0;flex:none}#hudT{min-width:0;overflow-wrap:anywhere}
 .chS{display:inline-block;min-width:28px;padding:4px 0;margin:2px;text-align:center;border-radius:14px;border:1px solid rgba(128,128,128,.5);background:transparent;color:inherit;font-size:13px;cursor:pointer}.chS.cur{background:var(--ac);color:#fff;border-color:var(--ac)}.chS.ok{border-color:#2e7d32;color:#2e7d32}.chS.no{border-color:#b3261e;color:#b3261e}.chS.cur.ok,.chS.cur.no{color:#fff}.soal{border-top:1px solid rgba(128,128,128,.3);padding:8px 0}.op{display:block;padding:3px 0}.hs{margin:4px 0;font-size:14px}.hs.ok{color:#2e7d32}.hs.no{color:#b3261e}
 .jw{padding:7px 16px;border:0;border-radius:8px;background:var(--ac);color:#fff;cursor:pointer}
 #kb h3{margin:12px 0 4px}#kb h4{margin:10px 0 4px}.tb{width:100%;border-collapse:collapse;font-size:13px}.tb td,.tb th{border:1px solid rgba(128,128,128,.35);padding:4px 6px;text-align:center}.tb td:first-child,.tb th:first-child{text-align:left}.tbw{overflow-x:auto}.cp{display:inline-block;width:10px;height:10px;border-radius:50%}#kb .baris{display:flex;gap:6px;margin:4px 0}.hasil{margin-top:10px;padding:8px;border-radius:8px;background:rgba(128,128,128,.15);word-break:break-all}
@@ -50,7 +50,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:
 :focus-visible{outline:3px solid #1565c0;outline-offset:2px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :focus-visible{outline-color:#90caf9}}:root[data-theme="dark"] :focus-visible{outline-color:#90caf9}
 #kh:focus{outline:none}#kh:focus-visible{outline:3px solid #fff;outline-offset:-5px}
-#hud{padding:0 10px}#hud button{min-height:44px;padding:0 6px}
+#hud{padding:3px 10px}#hud button{min-height:44px;padding:0 6px}
 #ka button,#ovl button,#kb button.p,#kb button.s2,.jw,#bBer{min-height:44px}
 /* v0.10.15 gerak UI ringan (mati otomatis bila prefers-reduced-motion) */
 #kartu{animation:krMasuk .18s ease-out}@keyframes krMasuk{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
@@ -81,7 +81,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:
 
 <script>
 (function(){
-var VERSI='v0.15.0', bagian='awal', srv='', mode='';
+var VERSI='v0.15.1', bagian='awal', srv='', mode='';
 var API_URL='https://script.google.com/macros/s/AKfycbxhPo2-GvJClHxNav_TMjN4sFiLCzyi8yTFvbIQT62yUQ8NPBaAaIZCbTN5fmN85qc/exec';
 var GOOGLE_CLIENT_ID='503152505847-niasbva2uksvum09lsm85j8pursok0b8.apps.googleusercontent.com';
 var sentuh=('ontouchstart' in window)||(navigator.maxTouchPoints>0);
@@ -141,8 +141,9 @@ addEventListener('blur',function(){for(var k in KEY)delete KEY[k];TURN.l=TURN.r=
  addEventListener('wheel',function(e){if(panelBuka||(e.target.closest&&e.target.closest('#panel')))return;setFov(FOV+(e.deltaY>0?4:-4));},{passive:true});
 })();
 
-/* ===== v0.15.0: Mode VR untuk HP, SATU layar penuh (v0.14.0 sempat memakai layar terbelah; dihapus atas permintaan pengguna) =====
-   Tombol VR (kanan atas, hanya layar sentuh): layar penuh, menoleh dengan memutar HP (giroskop), titik bidik di tengah.
+/* ===== v0.15.1: tombol VR dipindah ke kanan bawah (v0.15.0 tertutup HUD bila nama siswa panjang di HP tegak).
+   v0.15.0: Mode VR untuk HP, SATU layar penuh (v0.14.0 sempat memakai layar terbelah; dihapus atas permintaan pengguna) =====
+   Tombol VR (kanan bawah, hanya layar sentuh): layar penuh, menoleh dengan memutar HP (giroskop), titik bidik di tengah.
    Memilih: ketuk seperti biasa, ATAU tatap 1,5 detik (meja = duduk + panel; lantai = berjalan; saat duduk menunduk jauh = berdiri; papan = buka).
    Joystick dan HUD tetap ada. Tanpa WebXR, tanpa pustaka baru. */
 var VR={on:false,ori:null,yaw0:null,yawSet:null,wl:null,fs:false,gz:{el:null,t0:0,kunci:0},tR:0,izin:''};
@@ -216,7 +217,7 @@ function vrFsBerubah(){var fe=document.fullscreenElement||document.webkitFullscr
 document.addEventListener('fullscreenchange',vrFsBerubah);document.addEventListener('webkitfullscreenchange',vrFsBerubah);
 (function bangunVR(){
  var st=document.createElement('style');
- st.textContent='#bVR{position:fixed;right:calc(60px + env(safe-area-inset-right,0px));top:calc(8px + env(safe-area-inset-top,0px));z-index:21;min-width:44px;height:44px;padding:0 12px;border-radius:22px;border:0;background:var(--card);color:var(--ac);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.25);display:none}'+
+ st.textContent='#bVR{position:fixed;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(48px + env(safe-area-inset-bottom,0px));z-index:23;min-width:56px;height:56px;padding:0 14px;border-radius:28px;border:0;background:var(--card);color:var(--ac);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.25);display:none}'+
  '#vrPesan{position:fixed;left:50%;top:calc(60px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:24;max-width:min(90vw,520px);background:rgba(0,0,0,.72);color:#fff;font-size:14px;padding:8px 12px;border-radius:10px;display:none;text-align:center;pointer-events:none}'+
  '#vrDot{position:fixed;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;z-index:19;pointer-events:none;display:none;background:radial-gradient(circle,#fff 0 3px,rgba(0,0,0,.6) 3.5px 4.5px,transparent 5px),conic-gradient(#ffd54f calc(var(--p,0)*360deg),rgba(255,255,255,.35) 0);-webkit-mask:radial-gradient(circle,#000 0 5px,transparent 5.5px 7px,#000 7.5px);mask:radial-gradient(circle,#000 0 5px,transparent 5.5px 7px,#000 7.5px)}'+
  'body.vr #vrDot{display:block}body.vr #hint{display:none!important}';
@@ -1326,6 +1327,6 @@ function mulai(){if(window.AFRAME){try{pasangScene();}catch(e){setV(false);}}els
 if(document.readyState==='complete')mulai();else window.addEventListener('load',mulai);
 })();
 </script>
-<!-- akhir Kelas Raudhah v0.15.0 -->
+<!-- akhir Kelas Raudhah v0.15.1 -->
 </body>
 </html>
