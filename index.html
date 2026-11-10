@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kelas Raudhah v0.24.0</title>
+<title>Kelas Raudhah v0.24.1</title>
 <style>
 :root{--bg:#f4f1ea;--fg:#1f2933;--card:#ffffff;--ac:#2f6f4f;--acT:#ffffff;--mut:#5f6b76;--emas:#7a5600}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1f23;--fg:#eef1f4;--card:#262c32;--ac:#6fcf97;--acT:#0b2416;--mut:#a3adb8;--emas:#f0c35a}}
@@ -181,9 +181,11 @@ body.konfBuka #joy,body.konfBuka #bBer,body.konfBuka .bp,body.konfBuka #bVRx{vis
 
 <script>
 (function(){
-var VERSI='v0.24.0', bagian='awal', srv='', mode='';
+var VERSI='v0.24.1', bagian='awal', srv='', mode='';
 /* v0.23.0: versi halaman dan versi Code.gs dipisah (Code.gs dipakai bersama dengan Eco-Gazebo; naik versi hanya bila isinya berubah). */
-var VERSI_SERVER='v0.22.0';
+/* v0.24.1: server cocok bila versinya >= SERVER_MIN (seperti Eco), supaya Code.gs bersama boleh naik versi (mis. v0.23.0 dari Eco) tanpa label merah. */
+var SERVER_MIN='v0.22.0';
+function vnum(v){return String(v||'').replace('v','').split('.').map(Number).reduce(function(a,x){return a*1000+(x||0);},0);}
 /* v0.24.0: butir Eco-Gazebo dan panel Adiwiyata dihapus dari menu (Adiwiyata kini aplikasi sendiri). Beranda = halaman penghubung, dibuka di tab yang sama. */
 var URL_BERANDA='https://diahayu88.github.io/';
 var API_URL='https://script.google.com/macros/s/AKfycbxhPo2-GvJClHxNav_TMjN4sFiLCzyi8yTFvbIQT62yUQ8NPBaAaIZCbTN5fmN85qc/exec';
@@ -1821,7 +1823,7 @@ function cekServer(){
  fetch(API_URL+(API_URL.indexOf('?')<0?'?':'&')+'aksi=ping&v='+encodeURIComponent(VERSI),ctl?{signal:ctl.signal}:{})
  .then(function(r){return r.json();})
  .then(function(j){clearTimeout(to);
-  if(j&&j.ok){srv=' · server OK '+j.versi+(j.versi!==VERSI_SERVER?' (versi beda!)':'')+(j.sheetSiap?'':' · sheet belum siap')+' · '+(Date.now()-t0)+' ms'+tandaLingk(j);if(j.versi!==VERSI_SERVER||!j.sheetSiap){bagian='server';setV(false);}else{setV(true);}}
+  if(j&&j.ok){var lama=vnum(j.versi)<vnum(SERVER_MIN);srv=' · server OK '+j.versi+(lama?' (server terlalu lama!)':'')+(j.sheetSiap?'':' · sheet belum siap')+' · '+(Date.now()-t0)+' ms'+tandaLingk(j);if(lama||!j.sheetSiap){bagian='server';setV(false);}else{setV(true);}}
   else{srv=' · server menolak';bagian='server';setV(false);}})
  .catch(function(){clearTimeout(to);srv=' · server tidak terjangkau';bagian='server';setV(false);});
 }
@@ -1876,6 +1878,6 @@ function mulai(){if(window.AFRAME){try{pasangScene();}catch(e){setV(false);}}els
 if(document.readyState==='complete')mulai();else window.addEventListener('load',mulai);
 })();
 </script>
-<!-- akhir Kelas Raudhah v0.24.0 -->
+<!-- akhir Kelas Raudhah v0.24.1 -->
 </body>
 </html>
